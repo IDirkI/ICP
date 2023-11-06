@@ -13,14 +13,14 @@ int main(int, char**){
               0,  1,  0,
               0,  0,  1;
 
-    dstPc <<  0.965926,  0,  0.258819,
-              4.5,  5.5,  4.5,
-              -0.258819,  0,  0.965926;
+    dstPc <<  1, 0,  0,
+              0,  1,  0,
+              0,  0,  1;
 
     Eigen::MatrixXd iPc = srcPc.transpose();
     Eigen::MatrixXd fPc = dstPc.transpose();
 
-    Eigen::Matrix4d output = getBestFitTransformation(iPc, fPc);
+    ICP_OUT output = icp(iPc, fPc, 0.000001, 10);
 
-    cout<< output << endl;
+    cout << output.transformation << endl;
 }

@@ -7,7 +7,7 @@ using namespace std;
 using namespace Eigen;
 
 /* Gets the magnitude of the distance vector between two vectors */ 
-float distance(const Eigen::Vector3d &v1, Eigen::Vector3d &v2) {
+float distance(const Eigen::Vector3d &v1, const Eigen::Vector3d &v2) {
     return sqrt((v1[0] - v2[0])*(v1[0] - v2[0]) +
                 (v1[1] - v2[1])*(v1[1] - v2[1]) +
                 (v1[2] - v2[2])*(v1[2] - v2[2]) );
@@ -20,7 +20,7 @@ float distance(const Eigen::Vector3d &v1, Eigen::Vector3d &v2) {
 
     ie. the 0th index of the indicies vector hold the index of the closest neighbor in dst of the 0th vector in src.
 */
-NEIGHBOR getClosestNeighbor(Eigen::MatrixXd &src, Eigen::MatrixXd &dst) {
+NEIGHBOR getClosestNeighbor(const Eigen::MatrixXd &src, const Eigen::MatrixXd &dst) {
     NEIGHBOR neighbor;
 
     Eigen::Vector3d srcVec;
@@ -100,8 +100,11 @@ NEIGHBOR getClosestNeighbor(Eigen::MatrixXd &src, Eigen::MatrixXd &dst) {
     equivelent to H⁻¹. This is because there should be no scaling involved in our transformations, thus σ₁, σ₂, σ₃ = 1 (?)
     and so S = I₃. Making svd(H) = UI₃Vᵀ = UVᵀ. Thus [svd(H)]⁻¹ = [svd(H)]ᵀ = (UVᵀ)ᵀ = VUᵀ = R. 
 */
-Eigen::Matrix4d getBestFitTransformation(Eigen::MatrixXd &A, Eigen::MatrixXd &B) {
+Eigen::Matrix4d getBestFitTransformation(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B) {
     // The sets of points kept as nx3 matricies A and B are short hand for the point clouds src and dst respectively
+
+    int row = A.rows(); // TODO: Add code safety with min(A, B)? Check if needed
+
     /*
         T ∈ ℝ⁴ˣ⁴ is a homogeneuos transformation matrix s.t.
                 ╔       ╗   Where:
@@ -123,8 +126,6 @@ Eigen::Matrix4d getBestFitTransformation(Eigen::MatrixXd &A, Eigen::MatrixXd &B)
 
     Eigen::Vector3d centroidA(0,0,0);
 	Eigen::Vector3d centroidB(0,0,0);
-
-    int row = A.rows(); // TODO: Add code safety with min(A, B)? Check if needed
 
     // SVD matricies
     Eigen::MatrixXd H;
@@ -185,4 +186,71 @@ Eigen::Matrix4d getBestFitTransformation(Eigen::MatrixXd &A, Eigen::MatrixXd &B)
     }
 
     return T;
+}
+
+// Main iterative loop algorithm
+ICP_OUT icp( const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, double threshold, int maxIterationNumber ) {
+    ICP_OUT result; 
+
+    Matrix4d T;
+
+    NEIGHBOR neighbor;
+
+    int row = A.rows();
+    // These matricies hold column vectors not row
+    MatrixXd src = MatrixXd::Ones(4, row);
+    MatrixXd src3d = MatrixXd::Ones(3, row);
+    MatrixXd dst = MatrixXd::Ones(4, row);
+    MatrixXd dstOrd = MatrixXd::Ones(3, row);
+
+    int iter = 0;
+
+    double err = 0;
+    double meanErr = 0;
+
+    for(int i = 0; i < row; i++) {
+        // src and src3d are the same but src has an extra row so that T can be applied to src. (T is 4x4)
+        src.block<3,1>(0,i) = A.block<1,3>(i,0).transpose();     
+		src3d.block<3,1>(0,i) = A.block<1,3>(i,0).transpose();  
+		dst.block<3,1>(0,i) = B.block<1,3>(i,0).transpose();
+    }
+
+    // Start the iteration loop
+    for(iter = 0; iter < maxIterationNumber; iter++) {
+        neighbor = getClosestNeighbor(src3d.transpose(), B); // src3d has column vectors while B has row vectors, so src3d has to be transposed.
+
+        for (int j = 0; j < row; j++) {
+            dstOrd.block<3,1>(0,j) = dst.block<3,1>(0,neighbor.indicies[j]);
+        }
+
+        // Guess a transformation with the semi ordered dstOrd
+        T = getBestFitTransformation(src3d.transpose(), dstOrd.transpose());
+
+        // Update src points
+        src = T*src;
+
+        // Reconstruct src3d as the first three rows of the new src points
+        for (int j=0; j<row; j++) {
+			src3d.block<3,1>(0,j) = src.block<3,1>(0,j);
+        }
+
+        meanErr = 0.0f;
+		for (int i=0; i<neighbor.distances.size();i++) {
+            meanErr += neighbor.distances[i];
+        }
+		meanErr /= neighbor.distances.size();
+        cout << abs(err - meanErr) << endl;
+		if (abs(err - meanErr) < threshold) {
+			break;
+        }
+		err = meanErr;
+    }
+
+    T = getBestFitTransformation(A, src3d.transpose());
+
+    result.transformation = T;
+    result.iterations = iter;
+    result.distances = neighbor.distances;
+
+    return result;
 }
