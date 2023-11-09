@@ -1,0 +1,259 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "ICP++.exe"
+		},
+		{
+			"path" : "ICP++.pdb"
+		}
+	],
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"_add_executable",
+			"add_executable",
+			"link_directories",
+			"target_link_libraries",
+			"add_definitions",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"C:/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 12,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 598,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 9,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 14,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 1,
+				"line" : 10,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 1,
+				"line" : 8,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 5,
+					"define" : "__SSE2__"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "__SSE3__"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "__SSE4_1__"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "__SSE4_2__"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "__SSE__"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "__SSSE3__"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 6,
+					"isSystem" : true,
+					"path" : "C:/vcpkg/vcpkg/installed/x64-windows/include"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"id" : "ICP++::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "-LC:\\vcpkg\\vcpkg\\installed\\x64-windows\\lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "-LC:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib",
+				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_segmentationd.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_surfaced.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_keypointsd.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_trackingd.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_recognitiond.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_stereod.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_mld.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_registrationd.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_featuresd.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_filtersd.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_sample_consensusd.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_searchd.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_kdtreed.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_iod.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_octreed.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\debug\\lib\\pcl_commond.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "ICP++",
+	"nameOnDisk" : "ICP++.exe",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "src/main.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}

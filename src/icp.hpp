@@ -141,7 +141,7 @@ Eigen::Matrix4d getBestFitTransformation(const Eigen::MatrixXd &A, const Eigen::
 		centroidA += A.block<1,3>(i,0).transpose();
 		centroidB += B.block<1,3>(i,0).transpose();
 	}
-    centroidA/= row;
+    centroidA /= row;
     centroidB /= row;
 
     // Calculating H = ∑(bₙ - b₀)(aₙ - a₀)ᵀ
@@ -239,9 +239,8 @@ ICP_OUT icp( const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, double threshol
             meanErr += neighbor.distances[i];
         }
 		meanErr /= neighbor.distances.size();
-        cout << abs(err - meanErr) << endl;
 		if (abs(err - meanErr) < threshold) {
-			break;
+			//break;
         }
 		err = meanErr;
     }

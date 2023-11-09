@@ -1,0 +1,8 @@
+[
+{
+  "directory": "C:/Coding/ICP++/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -D__SSE2__ -D__SSE3__ -D__SSE4_1__ -D__SSE4_2__ -D__SSE__ -D__SSSE3__ @CMakeFiles/ICP++.dir/includes_CXX.rsp -g -o CMakeFiles\\ICP++.dir\\src\\main.cpp.obj -c C:\\Coding\\ICP++\\src\\main.cpp",
+  "file": "C:/Coding/ICP++/src/main.cpp",
+  "output": "CMakeFiles/ICP++.dir/src/main.cpp.obj"
+}
+]
