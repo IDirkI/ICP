@@ -50,9 +50,5 @@
         "streambuf": "cpp",
         "typeinfo": "cpp",
         "eigen": "cpp"
-    },
-
-    "cmake.configureSettings": {
-        "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake"
     }
 }

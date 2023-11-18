@@ -1,10 +1,13 @@
 {
     "configurations": [
         {
-            "name": "Win32",
+            "name": "Win64",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\vcpkg\\vcpkg\\installed\\x64-windows\\include\\**"
+                "C:\\Program Files\\PCL 1.13.1\\include\\pcl-1.13",
+                "C:\\Program Files\\PCL 1.13.1\\3rdParty\\Boost\\include\\boost-1_82",
+                "C:\\Program Files\\PCL 1.13.1\\3rdParty\\Eigen/eigen3",
+                "C:\\Program Files\\PCL 1.13.1\\3rdParty\\FLANN\\include"
             ],
             "defines": [
                 "_DEBUG",
