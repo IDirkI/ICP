@@ -1,18 +1,19 @@
 #include <iostream>
-#include <pcl/io/ply_io.h>
-#include <pcl/io/vtk_lib_io.h>
-#include <pcl/point_types.h>
-#include <pcl/registration/icp.h>
-#include <pcl/filters/filter_indices.h>
-#include <pcl/common/transforms.h>
+//#include <pcl/io/ply_io.h>
+//#include <pcl/io/vtk_io.h>
+//#include <pcl/point_types.h>
+//#include <pcl/registration/icp.h>
+//#include <pcl/filters/filter_indices.h>
+//#include <pcl/common/transforms.h>
 
 #include "Eigen/Eigen"
 #include "icp.hpp"
 
 using namespace std;
-using namespace pcl;
+//using namespace pcl;
 
 // Function to load files in the data directory
+/*
 void loadFile(const char* file_name, pcl::PointCloud<pcl::PointXYZ> &pc) {
 	pcl::PolygonMesh mesh;
 	if(pcl::io::loadPLYFile(file_name, mesh)==-1) {
@@ -26,8 +27,10 @@ void loadFile(const char* file_name, pcl::PointCloud<pcl::PointXYZ> &pc) {
 	vector<int> index;
 	pcl::removeNaNFromPointCloud(pc, pc, index);
 }
-
+*/
 int main(int, char**argv){
+	cout << "Hello";
+	/*
 	const int maxIterationNumber = 10;
 	const float threshold = 0.000001;
 		
@@ -80,7 +83,7 @@ int main(int, char**argv){
 	srcPointCloudTransformation = newCloud.makeShared();
 
 	cout << result.transformation << endl;
-
+*/
 	return(0);
 
 }

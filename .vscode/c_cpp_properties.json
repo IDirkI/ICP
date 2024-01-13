@@ -1,23 +1,20 @@
 {
     "configurations": [
         {
-            "name": "Win64",
+            "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\Program Files\\PCL 1.13.1\\include\\pcl-1.13",
-                "C:\\Program Files\\PCL 1.13.1\\3rdParty\\Boost\\include\\boost-1_82",
-                "C:\\Program Files\\PCL 1.13.1\\3rdParty\\Eigen/eigen3",
-                "C:\\Program Files\\PCL 1.13.1\\3rdParty\\FLANN\\include"
+                "C:/src/vcpkg/vcpkg/installed/x64-windows/include"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+            "compilerPath": "C:/msys64/mingw64/bin/g++.exe",
             "cStandard": "c17",
             "cppStandard": "gnu++17",
-            "intelliSenseMode": "windows-gcc-x64",
+            "intelliSenseMode": "windows-g++-x64",
             "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],

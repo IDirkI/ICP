@@ -1,9 +1,5 @@
-C:/Coding/ICP++/build/CMakeFiles/Experimental.dir
-C:/Coding/ICP++/build/CMakeFiles/Nightly.dir
-C:/Coding/ICP++/build/CMakeFiles/Continuous.dir
-C:/Coding/ICP++/build/CMakeFiles/NightlyMemoryCheck.dir
 C:/Coding/ICP++/build/CMakeFiles/ICP++.dir
-C:/Coding/ICP++/build/CMakeFiles/PACKAGE.dir
-C:/Coding/ICP++/build/CMakeFiles/RUN_TESTS.dir
-C:/Coding/ICP++/build/CMakeFiles/ALL_BUILD.dir
-C:/Coding/ICP++/build/CMakeFiles/ZERO_CHECK.dir
+C:/Coding/ICP++/build/CMakeFiles/package.dir
+C:/Coding/ICP++/build/CMakeFiles/package_source.dir
+C:/Coding/ICP++/build/CMakeFiles/edit_cache.dir
+C:/Coding/ICP++/build/CMakeFiles/rebuild_cache.dir

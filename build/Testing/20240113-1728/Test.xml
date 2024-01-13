@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Win32-mingw32-make"
+	BuildStamp="20240113-1728-Experimental"
+	Name="Berk_Laptop"
+	Generator="ctest-3.28.0-rc4"
+	CompilerName="C:/msys64/ucrt64/bin/g++.exe"
+	CompilerVersion="13.2.0"
+	OSName="Windows"
+	Hostname="Berk_Laptop"
+	OSRelease=" Personal"
+	OSVersion=" (Build 22631)"
+	OSPlatform="AMD64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="10"
+	TotalVirtualMemory="26348"
+	TotalPhysicalMemory="16108"
+	LogicalProcessorsPerPhysical="1"
+	ProcessorClockFrequency="2496"
+	>
+	<Testing>
+		<StartDateTime>Jan 13 13:39 Eastern Standard Time</StartDateTime>
+		<StartTestTime>1705171161</StartTestTime>
+		<TestList/>
+		<EndDateTime>Jan 13 13:39 Eastern Standard Time</EndDateTime>
+		<EndTestTime>1705171161</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>
