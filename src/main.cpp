@@ -1,10 +1,15 @@
 #include <iostream>
-//#include <pcl/io/ply_io.h>
-//#include <pcl/io/vtk_io.h>
-//#include <pcl/point_types.h>
-//#include <pcl/registration/icp.h>
-//#include <pcl/filters/filter_indices.h>
-//#include <pcl/common/transforms.h>
+#include <pcl/io/ply_io.h>
+#include <pcl/io/vtk_lib_io.h>
+#include <pcl/point_types.h>
+#include <pcl/registration/icp.h>
+#include <pcl/visualization/cloud_viewer.h>
+#include <pcl/filters/filter_indices.h>
+#include <pcl/common/transforms.h>
+
+#include <vtkRenderWindow.h>
+#include <vtkRendererCollection.h>
+#include <vtkCamera.h>
 
 #include "Eigen/Eigen"
 #include "icp.hpp"
@@ -13,26 +18,24 @@ using namespace std;
 //using namespace pcl;
 
 // Function to load files in the data directory
-/*
-void loadFile(const char* file_name, pcl::PointCloud<pcl::PointXYZ> &pc) {
+
+void loadFile(const char* fileName, pcl::PointCloud<pcl::PointXYZ> &pc) {
 	pcl::PolygonMesh mesh;
-	if(pcl::io::loadPLYFile(file_name, mesh)==-1) {
+	if(pcl::io::loadPLYFile(fileName, mesh)==-1) {
 		PCL_ERROR("File loading faild.");
 		return;
 	} 
-    else{
+    else {
 		pcl::fromPCLPointCloud2<pcl::PointXYZ>(mesh.cloud, pc);
 	}
 
 	vector<int> index;
 	pcl::removeNaNFromPointCloud(pc, pc, index);
 }
-*/
+
 int main(int, char**argv){
-	cout << "Hello";
-	/*
-	const int maxIterationNumber = 10;
-	const float threshold = 0.000001;
+	const int MAX_ITERATIONS = 10;
+	const float THRESHOLD = 0.000001;
 		
 	pcl::PointCloud<pcl::PointXYZ>::Ptr srcPointCloud (new pcl::PointCloud<pcl::PointXYZ>());
 	pcl::PointCloud<pcl::PointXYZ>::Ptr dstPointCloud (new pcl::PointCloud<pcl::PointXYZ>());
@@ -48,7 +51,9 @@ int main(int, char**argv){
 	Eigen::MatrixXf srcMatrix = srcPointCloud->getMatrixXfMap(3,4,0).transpose();
 	Eigen::MatrixXf dstMatrix = dstPointCloud->getMatrixXfMap(3,4,0).transpose();
 
-	ICP_OUT result = icp(srcMatrix.cast<double>(), dstMatrix.cast<double>(), maxIterationNumber, threshold);
+	cout << srcMatrix << endl;
+
+	ICP_OUT result = icp(srcMatrix.cast<double>(), dstMatrix.cast<double>(), THRESHOLD, MAX_ITERATIONS);
 
 	int iter = result.iterations;	
 	Matrix4f T = result.transformation.cast<float>();	
@@ -59,7 +64,7 @@ int main(int, char**argv){
 	int row = srcMatrix.rows();
 	MatrixXf transform4d = MatrixXf::Ones(3+1,row);
 
-	for(int i=0;i<row;i++) {
+	for(int i = 0; i  < row; i++) {
 		transform4d.block<3,1>(0,i) = srcMatrix.block<1,3>(i,0).transpose();
 	}
 
@@ -70,8 +75,10 @@ int main(int, char**argv){
 	}
 
 	pcl::PointCloud<pcl::PointXYZ> newCloud;
+
 	newCloud.width = row;
 	newCloud.height = 1;
+
 	newCloud.points.resize(row);
 	
 	for (int n=0; n<row; n++) {
@@ -83,7 +90,32 @@ int main(int, char**argv){
 	srcPointCloudTransformation = newCloud.makeShared();
 
 	cout << result.transformation << endl;
-*/
+	cout << result.iterations << endl;
+
+		{ // visualization
+		boost::shared_ptr <pcl::visualization::PCLVisualizer> viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
+		viewer->setBackgroundColor(255,255,255);
+
+		// black
+		pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> source_color(srcPointCloud,0,0,0);
+		viewer->addPointCloud<pcl::PointXYZ>(srcPointCloud,source_color,"source");
+		viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE,1,"source");
+
+		// blue
+		pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> target_color(dstPointCloud,0,0,255);
+		viewer->addPointCloud<pcl::PointXYZ>(dstPointCloud,target_color,"target");
+		viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE,1,"target");
+
+		// red
+		pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> source_trans_color(srcPointCloudTransformation,255,0,0);
+		viewer->addPointCloud<pcl::PointXYZ>(srcPointCloudTransformation,source_trans_color,"source trans");
+		viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE,1,"source trans");
+
+		viewer->getRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera()->SetParallelProjection(1);
+		viewer->resetCamera();
+		viewer->spin();
+	}
+	
 	return(0);
 
 }

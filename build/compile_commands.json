@@ -1,8 +1,0 @@
-[
-{
-  "directory": "C:/Coding/ICP++/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe   -g -o CMakeFiles\\ICP++.dir\\src\\main.cpp.obj -c C:\\Coding\\ICP++\\src\\main.cpp",
-  "file": "C:/Coding/ICP++/src/main.cpp",
-  "output": "CMakeFiles/ICP++.dir/src/main.cpp.obj"
-}
-]

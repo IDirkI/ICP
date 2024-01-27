@@ -1,5 +1,3 @@
-C:/Coding/ICP++/build/CMakeFiles/ICP++.dir
-C:/Coding/ICP++/build/CMakeFiles/package.dir
-C:/Coding/ICP++/build/CMakeFiles/package_source.dir
-C:/Coding/ICP++/build/CMakeFiles/edit_cache.dir
-C:/Coding/ICP++/build/CMakeFiles/rebuild_cache.dir
+/home/berk/Documents/GitHub/ICP/build/CMakeFiles/rebuild_cache.dir
+/home/berk/Documents/GitHub/ICP/build/CMakeFiles/edit_cache.dir
+/home/berk/Documents/GitHub/ICP/build/CMakeFiles/ICP.dir
