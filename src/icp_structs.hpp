@@ -13,7 +13,6 @@ typedef struct {
 typedef struct{
 	std::vector<int> indicies;
 	std::vector<float> distances;
-	float mean_distance;
 } NEIGHBOR;
 
 #endif
