@@ -101,10 +101,10 @@ NEIGHBOR kdNeighbor(const MatrixXd &src, const MatrixXd &tgt)
     getBestFitTransformation gives a mathematically ideal/perfect transformation from src to dst, 
     as long as the neighbor points are matched perfectly.
 
-    Mathematically getBestFitTransform relies mainly on the single value decomposition of a matrix H, 
-    that is characterized by the transformation of points from dst to src.
+    Mathematically getBestFitTransform relies mainly on the single value decomposition of a matrix COveriance matrx H, 
+    that is characterized by a homogenous transformatione from dst to src.
 
-    H is the prouct of three, in this case, square matricies. H = USVᵀ. U and S vectors are rotation matricies
+    Covariance of A and B, H, is the prouct of three, in this case, square matricies. H = USVᵀ. U and S vectors are rotation matricies
     while S is a diagonal, scaling matrix.
 
     Given H, two matricies:
@@ -139,11 +139,14 @@ NEIGHBOR kdNeighbor(const MatrixXd &src, const MatrixXd &tgt)
     Given these U, S and V; the rotation matrix from src to dst will be R = VUᵀ. This, for our sake should be 
     equivelent to H⁻¹. This is because there should be no scaling involved in our transformations, thus σ₁, σ₂, σ₃ = 1 (?)
     and so S = I₃. Making svd(H) = UI₃Vᵀ = UVᵀ. Thus [svd(H)]⁻¹ = [svd(H)]ᵀ = (UVᵀ)ᵀ = VUᵀ = R. 
+
+    Because size change is not present, σ values will always be σ₁ = σ₂ = 1, σ₃ = 0. Because σ₃ = 0, there are an infinite possible decompostions of H.
+    This doesn't matter for us as the end result will be the same.
 */
 Eigen::Matrix4d getBestFitTransformation(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B) {
     // The sets of points kept as nx3 matricies A and B are short hand for the point clouds src and dst respectively
 
-    int row = A.rows(); // TODO: Add code safety with min(A, B)? Check if needed
+    int row = min(A.rows(), B.rows()); // TODO: Add code safety with min(A, B)? Check if neede
 
     /*
         T ∈ ℝ⁴ˣ⁴ is a homogeneuos transformation matrix s.t.
@@ -158,18 +161,15 @@ Eigen::Matrix4d getBestFitTransformation(const Eigen::MatrixXd &A, const Eigen::
     Eigen::Matrix3d R;
     Eigen::Vector3d t;
 
-    /*
-        The only purpose of these matricies are to calculate the matrix H
-    */
-    Eigen::MatrixXd AA = A; // Assignment here is meaningless as AA is overwritten later. This is just to get AA to the correct size.
-	Eigen::MatrixXd BB = B; // Assignment here is meaningless as BB is overwritten later. This is just to get BB to the correct size.
+    Eigen::MatrixXd AA = A;
+	Eigen::MatrixXd BB = B;
 
     Eigen::Vector3d centroidA(0,0,0);
 	Eigen::Vector3d centroidB(0,0,0);
 
-    // SVD matricies
     Eigen::MatrixXd H;
 
+    // SVD matricies
     Eigen::MatrixXd U;
     Eigen::MatrixXd S;
     Eigen::MatrixXd V;
@@ -183,15 +183,22 @@ Eigen::Matrix4d getBestFitTransformation(const Eigen::MatrixXd &A, const Eigen::
     centroidA /= row;
     centroidB /= row;
 
-    // Calculating H = ∑(bₙ - b₀)(aₙ - a₀)ᵀ
+    // Case when src and dst clouds have different sizes.
+    // Keep thhe smallest set to ensure the matrix multiplicaation for the Covariance is defined.
+    if(A.rows() > B.rows()) {
+        AA = BB;
+    }
+    else {
+        BB = AA;
+    }
+
+    // Get the derivations of A & B
     for (int i=0; i<row; i++) {
 		AA.block<1,3>(i,0) = A.block<1,3>(i,0) - centroidA.transpose(); 
 		BB.block<1,3>(i,0) = B.block<1,3>(i,0) - centroidB.transpose();
 	}
-    /*
-        Here the order of multiplication is not equal to the definition because we hold vectors in AA and BB
-        as row vectors while the equation: H = ∑(bₙ - b₀)(aₙ - a₀)ᵀ assumes column vectors.
-    */
+    
+    // Get covariance of A and B
     H = AA.transpose()*BB;
 
     Eigen::JacobiSVD<MatrixXd> svd(H, ComputeFullU|ComputeFullV);
@@ -234,7 +241,7 @@ ICP_OUT icp( const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, double threshol
 
     NEIGHBOR neighbor;
 
-    int row = A.rows();
+    int row = min(A.rows(), B.rows());
 
     // These matricies hold column vectors not row
     MatrixXd src = MatrixXd::Ones(4, row);
@@ -284,8 +291,15 @@ ICP_OUT icp( const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, double threshol
 		err = meanErr;
     }
 
+    /*
+        > A is the initial point  cloud configuration.
+        > src3d is the best approximation given the constants to the dst
+        Best, transformation approxiamtion will be the transformation from A to src3d.
+        This gets us the final homogenous transformation.
+    */
     T = getBestFitTransformation(A, src3d.transpose());
 
+    // Set up the return variable.
     result.transformation = T;
     result.iterations = iter;
     result.distances = neighbor.distances;
