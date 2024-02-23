@@ -47,7 +47,7 @@ void icpStart(char** argv) {
 	// Configuration constants.
 	/*
 	> Higher MAX_ITERATIONS ---> longer wait time, 'possibly' more acctuarte results
-	> Lower  THRESHOLD 		---> longer wait time, most likely betterr accracy.
+	> Lower  THRESHOLD	---> longer wait time, most likely betterr accracy.
 	*/
 	const int MAX_ITERATIONS = 10;
 	const float THRESHOLD = 0.000001;

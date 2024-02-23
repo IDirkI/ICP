@@ -1,2 +1,2 @@
 # ICP
- ICP algorithm for LiDAR point cloud translation
+Simple ICP algorithm for finding transformations between point clouds using PCL(Point Cloud Library).

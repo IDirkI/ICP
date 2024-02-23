@@ -8,7 +8,7 @@ using namespace std;
 using namespace Eigen;
 using namespace nanoflann;
 
-/* Gets the magnitude of the distance vector between two vectors */ 
+// Gets the magnitude of the distance vector between two vectors
 float distance(const Eigen::Vector3d &v1, const Eigen::Vector3d &v2) {
     return sqrt((v1[0] - v2[0])*(v1[0] - v2[0]) +
                 (v1[1] - v2[1])*(v1[1] - v2[1]) +
@@ -16,81 +16,54 @@ float distance(const Eigen::Vector3d &v1, const Eigen::Vector3d &v2) {
 }
 
 /*
-    Loops through all points in the src point cloud, finding the nearest point to it in the dst point cloud.
+    Uses a k(k=3) dimentionak tree to more efficiently search through the points to match two points as neightbors.
+    Two points, p and q, are neighbors if point q, in the dst cloud, is the closest point to p in the dst cloud.
 
-    Store the distance between the neighbor src points and dst points along with the matching indicies
-
-    ie. the 0th index of the indicies vector hold the index of the closest neighbor in dst of the 0th vector in src.
+    Output is returned as NEIGHBOR which holds:
+        > the matching indicies between the neighbors 
+        > the distances between them.
+    Ex:
+    src[i] and dst[indicies[i]] are neighbor points and the ddistance between them is distances[i]
 */
-NEIGHBOR getClosestNeighbor(const Eigen::MatrixXd &src, const Eigen::MatrixXd &dst) {
-    NEIGHBOR neighbor;
-
-    Eigen::Vector3d srcVec;
-    Eigen::Vector3d dstVec;
-
-    int srcRow = src.rows();
-    int dstRow = dst.rows();
-
-    float minDistance = 100;
-    float dist = 0;
-    int index = 0;
-
-    for(int i = 0; i < srcRow; i++) {
-        srcVec = src.block<1,3>(i,0).transpose();
-
-        float minDistance = 100;
-        float dist = 0;
-        int index = 0;
-
-        for(int j = 0; j < dstRow; j++) {
-            dstVec = dst.block<1,3>(j,0).transpose();
-            dist = distance(srcVec, dstVec);
-            
-            if( dist < minDistance ) {
-                minDistance = dist;
-                index = j;
-            }
-        }
-
-        neighbor.distances.push_back(minDistance);
-        neighbor.indicies.push_back(index);
-    }
-
-    return neighbor;
-}
-
-NEIGHBOR kdNeighbor(const MatrixXd &src, const MatrixXd &tgt)
-{
+NEIGHBOR kdNeighbor(const MatrixXd &src, const MatrixXd &dst) {
 	int dim = 3;
-	int leaf_size = 10;
+	int leafSize = 10;
 	int K = 1;
-	int row_src = src.rows();
-	int row_tgt = tgt.rows();
-	Vector3d vec_src;
-	Vector3d vec_tgt;
+	int srcRow = src.rows();
+	int dstRow = dst.rows();
+	Vector3d srcVec;
+	Vector3d dstVec;
 	NEIGHBOR neighbor;
 
-	// build kdtree
-	Matrix<float,Dynamic,Dynamic> matrix_tgt(row_tgt,dim);
-	for (int i=0; i<row_tgt; i++)
-		for (int d=0; d<dim; d++)
-			matrix_tgt(i,d) = tgt(i,d);
+	// Setup the kdTree
+	Matrix<float,Dynamic,Dynamic> dstMatrix(dstRow, dim);
+
+	for (int i = 0; i < dstRow; i++) {
+        for (int d = 0; d < dim; d++) {
+		    dstMatrix(i,d) = dst(i,d);
+        }
+    }
+		
 	typedef KDTreeEigenMatrixAdaptor<Matrix<float,Dynamic,Dynamic> >kdtree_t;
-	kdtree_t kdtree_tgt(dim,cref(matrix_tgt),leaf_size);
-	kdtree_tgt.index->buildIndex();
+	kdtree_t dstTree(dim,cref(dstMatrix),leafSize);
+	dstTree.index->buildIndex();
 
-	for (int i=0; i<row_src; i++)
+    // Search by divisions
+	for (int i=0; i < srcRow; i++)
 	{
-		vector<float> point_src(dim);
-		for(int d=0; d<dim; d++)
-			point_src[d] = src(i,d);
-
-		vector<size_t> index(K);
+		vector<float> srcPoint(dim);
+        vector<size_t> index(K);
 		vector<float> distance(K);
+
+		for(int d=0; d<dim; d++) {
+			srcPoint[d] = src(i,d);
+        }
+
+
 		nanoflann::KNNResultSet<float> result_set(K);
 		result_set.init(&index[0], &distance[0]);
 		nanoflann::SearchParams params_ignored;
-		kdtree_tgt.index->findNeighbors(result_set,&point_src[0],params_ignored);
+		dstTree.index->findNeighbors(result_set,&srcPoint[0],params_ignored);
 		neighbor.indicies.push_back(index[0]);
 		neighbor.distances.push_back(distance[0]);
 	}
@@ -161,8 +134,8 @@ Eigen::Matrix4d getBestFitTransformation(const Eigen::MatrixXd &A, const Eigen::
     Eigen::Matrix3d R;
     Eigen::Vector3d t;
 
-    Eigen::MatrixXd AA = A;
-	Eigen::MatrixXd BB = B;
+    Eigen::MatrixXd derA = A;
+	Eigen::MatrixXd derB = B;
 
     Eigen::Vector3d centroidA(0,0,0);
 	Eigen::Vector3d centroidB(0,0,0);
@@ -186,20 +159,20 @@ Eigen::Matrix4d getBestFitTransformation(const Eigen::MatrixXd &A, const Eigen::
     // Case when src and dst clouds have different sizes.
     // Keep thhe smallest set to ensure the matrix multiplicaation for the Covariance is defined.
     if(A.rows() > B.rows()) {
-        AA = BB;
+        derA = derB;
     }
     else {
-        BB = AA;
+        derB = derA;
     }
 
     // Get the derivations of A & B
     for (int i=0; i<row; i++) {
-		AA.block<1,3>(i,0) = A.block<1,3>(i,0) - centroidA.transpose(); 
-		BB.block<1,3>(i,0) = B.block<1,3>(i,0) - centroidB.transpose();
+		derA.block<1,3>(i,0) = A.block<1,3>(i,0) - centroidA.transpose(); 
+		derB.block<1,3>(i,0) = B.block<1,3>(i,0) - centroidB.transpose();
 	}
     
     // Get covariance of A and B
-    H = AA.transpose()*BB;
+    H = derA.transpose()*derB;
 
     Eigen::JacobiSVD<MatrixXd> svd(H, ComputeFullU|ComputeFullV);
     U = svd.matrixU();
